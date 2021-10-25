@@ -7,7 +7,7 @@ import moment from 'moment';
 
 const feed = new Feed({
     title: "Osmosis Proposal",
-    id: "Osmosis proposals feed via Osmosistaion public api.",
+    id: "Osmosis proposals feed via Keplr api.",
     copyright: "Osmosis gov",
 });
 
