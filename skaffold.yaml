@@ -2,7 +2,7 @@ apiVersion: skaffold/v1
 kind: Config
 build:
   artifacts:
-  - image: derorisan/cosmos-proposal-atomfeed
+  - image: derorisan/osmosis-proposal-atomfeed
     docker:
       dockerfile: ./Dockerfile
   local:

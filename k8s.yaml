@@ -1,22 +1,22 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: cosmos-proposal-atomfeed
+  name: osmosis-proposal-atomfeed
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: cosmos-proposal-atomfeed
+      app: osmosis-proposal-atomfeed
   template:
     metadata:
       labels:
-        app: cosmos-proposal-atomfeed
+        app: osmosis-proposal-atomfeed
     spec:
       containers:
       - args:
-        image: derorisan/cosmos-proposal-atomfeed
+        image: derorisan/osmosis-proposal-atomfeed
         imagePullPolicy: Always
-        name: cosmos-proposal-atomfeed
+        name: osmosis-proposal-atomfeed
         ports:
         - containerPort: 4000
           protocol: TCP
@@ -24,7 +24,7 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: cosmos-proposal-atomfeed
+  name: osmosis-proposal-atomfeed
 spec:
   ports:
   - name: "http-port"
@@ -32,7 +32,7 @@ spec:
     port: 80
     targetPort: 4000
   selector:
-    app: cosmos-proposal-atomfeed
+    app: osmosis-proposal-atomfeed
 ---
 # # ingress
 # apiVersion: networking.k8s.io/v1
@@ -44,13 +44,13 @@ spec:
 #     nginx.ingress.kubernetes.io/rewrite-target: /
 # spec:
 #   rules:
-#     - host: cosmos-proposal-atomfeed.deroris.net
+#     - host: osmosis-proposal-atomfeed.deroris.net
 #       http:
 #         paths:
 #           - path: /
 #             pathType: Prefix
 #             backend:
 #               service:
-#                 name: cosmos-proposal-atomfeed
+#                 name: osmosis-proposal-atomfeed
 #                 port:
 #                   number: 80
