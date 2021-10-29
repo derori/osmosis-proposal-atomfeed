@@ -22,7 +22,6 @@ const fetchProposals = (async () => {
             title: `VotingEnd: ${new Date(Date.parse(oo.voting_end_time)).toUTCString()} **${oo.content.value.title}`,
             link: `https://wallet.keplr.app/#/osmosis/governance?detailId=${oo.id}`,
             date: new Date(Date.parse(oo.submit_time)),
-            description: oo.content.value.description,
             id: oo.id.toString(),
         });
 
