@@ -16,7 +16,7 @@ const fetchProposals = (async () => {
     const { data } = await axios.get(url);
     const ooo = data as Response;
     ooo.result = ooo.result.sort((a, b) => b.id - a.id);
-    for (const oo of ooo.result) {
+    for await (const oo of ooo.result) {
         if (!oo.id) continue;
         feed.addItem({
             title: `VotingEnd: ${new Date(Date.parse(oo.voting_end_time)).toUTCString()} **${oo.content.value.title}`,
