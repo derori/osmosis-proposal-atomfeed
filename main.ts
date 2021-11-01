@@ -5,18 +5,18 @@ import moment from 'moment';
 
 
 
-const feed = new Feed({
-    title: "Osmosis Proposal",
-    id: "Osmosis proposals feed via Keplr api.",
-    copyright: "Osmosis gov",
-});
 
 const fetchProposals = (async () => {
+    const feed = new Feed({
+        title: "Osmosis Proposal",
+        id: "Osmosis proposals feed via Keplr api.",
+        copyright: "Osmosis gov",
+    });
     const url = 'https://lcd-osmosis.keplr.app/gov/proposals';
     const { data } = await axios.get(url);
     const ooo = data as Response;
     ooo.result = ooo.result.sort((a, b) => b.id - a.id);
-    for await (const oo of ooo.result) {
+    for (const oo of ooo.result) {
         if (!oo.id) continue;
         feed.addItem({
             title: `VotingEnd: ${new Date(Date.parse(oo.voting_end_time)).toUTCString()} **${oo.content.value.title}`,
@@ -24,8 +24,9 @@ const fetchProposals = (async () => {
             date: new Date(Date.parse(oo.submit_time)),
             id: oo.id.toString(),
         });
-
     }
+
+    return feed;
     interface Response {
         height: number,
         result: GovProposalResponse[]
@@ -47,7 +48,7 @@ const fetchProposals = (async () => {
     }
 });
 const server = http.createServer(async (req: IncomingMessage, res: ServerResponse) => {
-    await fetchProposals();
+    const feed = await fetchProposals();
     res.writeHead(200, { 'Content-Type': 'application/atom+xml' });
     res.end(feed.atom1());
 })
