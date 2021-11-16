@@ -19,7 +19,7 @@ const fetchProposals = (async () => {
     for (const oo of ooo.result) {
         if (!oo.id) continue;
         feed.addItem({
-            title: `VotingEnd: ${new Date(Date.parse(oo.voting_end_time)).toUTCString()} **${oo.content.value.title}`,
+            title: `ProposalId: ${oo.id} Title: ${oo.content.value.title}`,
             link: `https://wallet.keplr.app/#/osmosis/governance?detailId=${oo.id}`,
             date: new Date(Date.parse(oo.submit_time)),
             id: oo.id.toString(),
