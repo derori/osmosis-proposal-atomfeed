@@ -12,7 +12,7 @@ const fetchProposals = (async () => {
         id: "Osmosis proposals feed via Keplr api.",
         copyright: "Osmosis gov",
     });
-    const url = 'https://lcd-osmosis.keplr.app/gov/proposals?limit=1000';
+    const url = 'https://lcd-osmosis.keplr.app/gov/proposals?proposal_status=0&pagination.limit=5&pagination.offset=0&pagination.reverse=true';
     const { data } = await axios.get(url);
     const ooo = data as Response;
     ooo.result = ooo.result.sort((a, b) => b.id - a.id);
