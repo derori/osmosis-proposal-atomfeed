@@ -1,0 +1,44 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: osmosis-testnet-proposal-atomfeed
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: osmosis-testnet-proposal-atomfeed
+  template:
+    metadata:
+      labels:
+        app: osmosis-testnet-proposal-atomfeed
+    spec:
+      containers:
+      - args:
+        image: derorisan/osmosis-testnet-proposal-atomfeed
+        imagePullPolicy: Always
+        name: osmosis-testnet-proposal-atomfeed
+        ports:
+        - containerPort: 4000
+          protocol: TCP
+        env:
+        - name: PROPS_ENDPOINT
+          value: https://osmosis-testnet-api.nodes.mresearch.xyz/cosmos/gov/v1beta1/proposals?proposal_status=0&pagination.limit=10&pagination.offset=0&pagination.reverse=true
+        - name: LINK_BASE_URL
+          value: https://testnet.mintscan.io/osmosis-testnet/proposals/
+        - name: CHAIN_NAME
+          value: OSMOSIS Testnet
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: osmosis-testnet-proposal-atomfeed
+spec:
+  ports:
+  - name: "http-port"
+    protocol: TCP
+    port: 80
+    targetPort: 4000
+  selector:
+    app: osmosis-testnet-proposal-atomfeed
+---

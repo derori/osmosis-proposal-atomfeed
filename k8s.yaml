@@ -20,6 +20,14 @@ spec:
         ports:
         - containerPort: 4000
           protocol: TCP
+        env:
+        - name: PROPS_ENDPOINT
+          value: https://osmosis-api.polkachu.com/cosmos/gov/v1beta1/proposals?proposal_status=0&pagination.limit=10&pagination.offset=0&pagination.reverse=true
+        - name: LINK_BASE_URL
+          value: https://www.mintscan.io/osmosis/proposals/
+        - name: CHAIN_NAME
+          value: OSMOSIS mainnet
+
 ---
 kind: Service
 apiVersion: v1
@@ -34,23 +42,3 @@ spec:
   selector:
     app: osmosis-proposal-atomfeed
 ---
-# # ingress
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: lb
-#   namespace: ip-deroris-net-prod
-#   annotations:
-#     nginx.ingress.kubernetes.io/rewrite-target: /
-# spec:
-#   rules:
-#     - host: osmosis-proposal-atomfeed.deroris.net
-#       http:
-#         paths:
-#           - path: /
-#             pathType: Prefix
-#             backend:
-#               service:
-#                 name: osmosis-proposal-atomfeed
-#                 port:
-#                   number: 80

@@ -1,50 +1,48 @@
 import http, { IncomingMessage, ServerResponse } from 'http'
 import axios from 'axios';
 import { Feed } from 'feed';
-import moment from 'moment';
 
-
-
+const propsEndpoint = process.env.PROPS_ENDPOINT || '';
+const chainName = process.env.CHAIN_NAME || 'Undefined as ENV';
+const locationBaseUrl = process.env.LINK_BASE_URL;
 
 const fetchProposals = (async () => {
     const feed = new Feed({
-        title: "Osmosis Proposal",
-        id: "Osmosis proposals feed via Keplr api.",
-        copyright: "Osmosis gov",
+        title: `${chainName} Proposals`,
+        id: `${chainName} proposals feed via mynode api.`,
+        copyright: `${chainName} gov`,
     });
-    const url = 'https://lcd-osmosis.keplr.app/gov/proposals?proposal_status=0&pagination.limit=5&pagination.offset=0&pagination.reverse=true';
-    const { data } = await axios.get(url);
-    const ooo = data as Response;
-    ooo.result = ooo.result.sort((a, b) => b.id - a.id);
-    for (const oo of ooo.result) {
-        if (!oo.id) continue;
+    const { data } = await axios.get(propsEndpoint);
+    let ooo: GovProposalResponse[] = await data.proposals as GovProposalResponse[];
+
+    for await (const oo of ooo) {
+        if (!oo.proposal_id) continue;
+        console.dir(oo.voting_end_time);
         feed.addItem({
-            title: `ProposalId: ${oo.id} Title: ${oo.content.value?.title}`,
-            link: `https://wallet.keplr.app/#/osmosis/governance?detailId=${oo.id}`,
-            date: new Date(Date.parse(oo.submit_time)),
-            id: oo.id.toString(),
+            title: `VotingEnd: ${new Date(oo.voting_end_time).toISOString()} **${oo.content.title}`,
+            link: `${locationBaseUrl}${oo.proposal_id}`,
+            date: new Date(oo.submit_time),
+            id: oo.proposal_id,
         });
     }
 
     return feed;
-    interface Response {
-        height: number,
-        result: GovProposalResponse[]
-    }
 
     interface GovProposalResponse {
-        id: number,
         content: {
-            type: string,
-            value: {
-                title: string,
-                description: string
-            }
+            '@type': string,
+            description: string,
+            title: string
         },
+        deposit_end_time: Date,
+        final_tally_result: {},
+        is_expedited: boolean,
+        proposal_id: string,
+        status: string,
         submit_time: string,
-        deposit_end_time: string,
-        voting_start_time: string,
+        total_deposit: {},
         voting_end_time: string,
+        voting_start_time: Date
     }
 });
 const server = http.createServer(async (req: IncomingMessage, res: ServerResponse) => {
